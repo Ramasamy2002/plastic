@@ -3,6 +3,7 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
 from PIL import Image
+import time
 
 # Function to load the model with TensorFlow Hub
 @st.cache(allow_output_mutation=True)
@@ -26,7 +27,7 @@ uploaded_file = st.sidebar.file_uploader("Choose an image...", type=["jpg","png"
 
 if uploaded_file is not None:
     # Load the model
-    model_path = 'mobile.h5'
+    model_path = 'C:/Users/91934/Downloads/mobile.h5'
     model = load_model_with_hub(model_path)
 
     # Display the uploaded image
@@ -35,17 +36,22 @@ if uploaded_file is not None:
 
     # Function to make predictions
     def predict_image(image):
+        start_time=time.time()
         image_array = np.array(image.resize((224, 224))) / 255.0
         result = model.predict(image_array[np.newaxis, ...])
+        end_time=time.time()
+        predict_time=end_time-start_time
         predicted_label_index = np.argmax(result)
-        return predicted_label_index
+        return predicted_label_index,predict_time
 
     # Make prediction
-    predicted_label_index = predict_image(image)
+    predicted_label_index ,predict_time= predict_image(image)
 
     # Display the result
     class_labels = ['HDPE', 'PET', 'PP', 'PS', 'PVC']
     st.write("Prediction Result:")
     st.write(f"Predicted Class: {class_labels[predicted_label_index]}")
+    st.write(f"Prediction time: {predict_time:.4f} seconds")
+    
 
 # Run the app with: streamlit run your_script.py
