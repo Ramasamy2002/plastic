@@ -27,7 +27,7 @@ uploaded_file = st.sidebar.file_uploader("Choose an image...", type=["jpg","png"
 
 if uploaded_file is not None:
     # Load the model
-    model_path = 'C:/Users/91934/Downloads/mobile.h5'
+    model_path = 'mobile.h5'
     model = load_model_with_hub(model_path)
 
     # Display the uploaded image
